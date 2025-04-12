@@ -1,6 +1,7 @@
 "use client";
 import { useAdvocateSearch } from "@/hooks/useAdvocateSearch";
 import { useEffect } from "react";
+import { Divider, Input, Space, Table } from "antd";
 
 export default function Home() {
   const { searchTerm, advocates, setSearchTerm, fetchAdvocates } =
@@ -15,61 +16,71 @@ export default function Home() {
     setSearchTerm(e.target.value);
   };
 
-  const onReset = () => {
-    setSearchTerm("");
-  };
-
   return (
-    <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
-      <div>
-        <p>Search</p>
-        <p>
-          Searching for: <span id='search-term'>{searchTerm}</span>
-        </p>
-        <input
-          style={{ border: "1px solid black" }}
-          value={searchTerm}
-          onChange={onSearchInputChange}
-        />
-        <button onClick={onReset}>Reset Search</button>
+    <main className='my-4'>
+      <h1 className='mx-4'>Solace Advocates</h1>
+      <div className='sticky top-0 z-10 bg-white py-4 px-4 shadow-md'>
+        <Divider orientation='left'>Search</Divider>
+        <Space direction='horizontal'>
+          <Input.Search
+            allowClear
+            value={searchTerm}
+            onChange={onSearchInputChange}
+            placeholder='Search advocates...'
+          />
+          <span> {`${advocates.length} results`} </span>
+        </Space>
       </div>
-      <br />
-      <br />
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {advocates.map((advocate) => {
-            return (
-              <tr key={advocate.firstName}>
-                <td key={advocate.firstName}>{advocate.firstName}</td>
-                <td key={advocate.lastName}>{advocate.lastName}</td>
-                <td key={advocate.city}>{advocate.city}</td>
-                <td key={advocate.degree}>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s) => (
-                    <div key={s}>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Table
+        dataSource={advocates}
+        columns={columns}
+        pagination={{ position: ["topRight"] }}
+      />
     </main>
   );
 }
+
+const columns = [
+  {
+    title: "First Name",
+    dataIndex: "firstName",
+    key: "firstName",
+  },
+  {
+    title: "Last Name",
+    dataIndex: "lastName",
+    key: "lastName",
+  },
+  {
+    title: "City",
+    dataIndex: "city",
+    key: "city",
+  },
+  {
+    title: "Degree",
+    dataIndex: "degree",
+    key: "degree",
+  },
+  {
+    title: "Specialties",
+    dataIndex: "specialties",
+    key: "specialties",
+    render: (specialties: string[]) => (
+      <>
+        {specialties.map((specialty) => (
+          <div key={specialty}>{specialty}</div>
+        ))}
+      </>
+    ),
+  },
+  {
+    title: "Years of Experience",
+    dataIndex: "yearsOfExperience",
+    key: "yearsOfExperience",
+  },
+  {
+    title: "Phone Number",
+    dataIndex: "phoneNumber",
+    key: "phoneNumber",
+  },
+];
