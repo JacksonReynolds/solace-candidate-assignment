@@ -1,28 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
-
-type Advocate = {
-  firstName: string;
-  lastName: string;
-  city: string;
-  degree: string;
-  specialties: string[];
-  yearsOfExperience: number;
-  phoneNumber: string;
-};
+import { useAdvocateSearch } from "@/hooks/useAdvocateSearch";
+import { useEffect } from "react";
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState<Advocate[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const { searchTerm, advocates, setSearchTerm, fetchAdvocates } =
+    useAdvocateSearch();
 
   useEffect(() => {
     console.log("fetching advocates...");
-    fetch(`/api/advocates?search=${searchTerm}`).then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-      });
-    });
-  }, [searchTerm]);
+    fetchAdvocates(searchTerm);
+  }, [searchTerm, fetchAdvocates]);
 
   const onSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
