@@ -1,7 +1,7 @@
 "use client";
 import { useAdvocateSearch } from "@/hooks/useAdvocateSearch";
 import { useEffect } from "react";
-import { Divider, Input, Space, Table } from "antd";
+import { Divider, Input, Space, Table, Tag } from "antd";
 
 export default function Home() {
   const { searchTerm, advocates, setSearchTerm, fetchAdvocates } =
@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <main className='my-4'>
       <h1 className='mx-4'>Solace Advocates</h1>
-      <div className='sticky top-0 z-10 bg-white py-4 px-4 shadow-md'>
+      <div className='sticky top-0 z-10 bg-white pt-1 pb-4 px-4 shadow-md'>
         <Divider orientation='left'>Search</Divider>
         <Space direction='horizontal'>
           <Input.Search
@@ -68,7 +68,7 @@ const columns = [
     render: (specialties: string[]) => (
       <>
         {specialties.map((specialty) => (
-          <div key={specialty}>{specialty}</div>
+          <Tag key={specialty}>{specialty}</Tag>
         ))}
       </>
     ),
