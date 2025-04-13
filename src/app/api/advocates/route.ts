@@ -6,18 +6,11 @@ const toTsQueryArg = (query: string) =>
   query
     .trim()
     .split(/\s+/)
-    .map((term) => `${term}:*`)
+    .map((term) => `${term}:*`) // only allows prefixing unfortunately
     .join(" & ");
 
 const fuzzySearchQuery = (searchTerm: string) => sql`(
-  setweight(to_tsvector('english', ${advocates.firstName}), 'A') ||
-  setweight(to_tsvector('english', ${advocates.lastName}), 'A') ||
-  setweight(to_tsvector('english', ${advocates.city}), 'A') ||
-  setweight(to_tsvector('english', ${advocates.degree}), 'A') ||
-  setweight(to_tsvector('english', cast(${advocates.yearsOfExperience} as text)), 'A') ||
-  setweight(to_tsvector('english', cast(${advocates.specialties} as text)), 'A') ||
-  setweight(to_tsvector('english', cast(${advocates.phoneNumber} as text)), 'A')
-    @@ to_tsquery('english', ${searchTerm})
+  ${advocates.generatedTextSearch} @@ to_tsquery('english', ${searchTerm})
   )`;
 
 export async function GET(request: Request) {
